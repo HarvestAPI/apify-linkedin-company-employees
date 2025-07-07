@@ -33,5 +33,6 @@
       "example": ["New York", "California"],
       "maxItems": 10
     }
-  }
+  },
+  "required": ["companies"]
 }
