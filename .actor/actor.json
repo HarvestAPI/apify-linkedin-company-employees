@@ -1,0 +1,12 @@
+{
+  "actorSpecification": 1,
+  "name": "linkedin-company-employees",
+  "title": "LinkedIn Company Employees Scraper",
+  "description": "This actor scrapes employees from a LinkedIn company page.",
+  "version": "0.0",
+  "minMemoryMbytes": 128,
+  "maxMemoryMbytes": 256,
+  "usesStandbyMode": false,
+  "input": "./input_schema.json",
+  "dockerfile": "./Dockerfile"
+}

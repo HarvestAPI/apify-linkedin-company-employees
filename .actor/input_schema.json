@@ -1,0 +1,36 @@
+{
+  "title": "Search LinkedIn Company Employees",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "profileScraperMode": {
+      "title": "Profile Scraper Mode",
+      "type": "string",
+      "enum": ["Short ($4 per 1k)", "Full ($8 per 1k)", "Full + email search ($12 per 1k)"],
+      "description": "Choose the mode for scraping LinkedIn profiles. The Short mode provides basic information, while the Full mode includes full detailed profile data.",
+      "prefill": "Full ($8 per 1k)"
+    },
+    "maxItems": {
+      "title": "Maximum number of profiles to scrape for all queries",
+      "type": "integer",
+      "description": "Maximum number of profiles to scrape for all queries. The actor will stop scraping when this limit is reached.",
+      "prefill": 20
+    },
+    "companies": {
+      "title": "Companies",
+      "type": "array",
+      "editor": "stringList",
+      "description": "Search employees of these companies. Provide full LinkedIn URLs. Example: `https://www.linkedin.com/company/google`",
+      "maxItems": 10,
+      "prefill": ["https://www.linkedin.com/company/google"]
+    },
+    "locations": {
+      "title": "Locations Filter",
+      "type": "array",
+      "editor": "stringList",
+      "description": "Filter employees by these LinkedIn locations. Example: `San Francisco`",
+      "prefill": ["New York", "California"],
+      "maxItems": 10
+    }
+  }
+}
