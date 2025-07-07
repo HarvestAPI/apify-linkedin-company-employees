@@ -92,11 +92,16 @@ if (input.maxItems && input.maxItems < state.leftItems) {
   state.leftItems = input.maxItems;
 }
 
+let freeUserItemsLimit = 50;
+if (profileScraperMode === ProfileScraperMode.EMAIL) {
+  freeUserItemsLimit = 10;
+}
+
 let isFreeUserExceeding = false;
 const logFreeUserExceeding = () =>
   console.warn(
     styleText('bgYellow', ' [WARNING] ') +
-      ' Free users are limited up to 50 items per run. Please upgrade to a paid plan to scrape more items.',
+      ` Free users are limited up to ${freeUserItemsLimit} items per run. Please upgrade to a paid plan to scrape more items.`,
   );
 
 if (!isPaying) {
@@ -109,9 +114,9 @@ if (!isPaying) {
     process.exit(0);
   }
 
-  if (state.leftItems > 50) {
+  if (state.leftItems > freeUserItemsLimit) {
     isFreeUserExceeding = true;
-    state.leftItems = 50;
+    state.leftItems = freeUserItemsLimit;
     logFreeUserExceeding();
   }
 }
