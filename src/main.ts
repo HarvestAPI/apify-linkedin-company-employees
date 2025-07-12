@@ -64,6 +64,12 @@ for (const key of Object.keys(query) as (keyof typeof query)[]) {
   }
 }
 
+if (!query.currentCompanies.length) {
+  console.error('Please provide at least one company.');
+  await Actor.exit();
+  process.exit(0);
+}
+
 const { actorId, actorRunId, actorBuildId, userId, actorMaxPaidDatasetItems, memoryMbytes } =
   Actor.getEnv();
 const client = Actor.newClient();

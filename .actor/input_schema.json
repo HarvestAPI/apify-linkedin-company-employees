@@ -22,7 +22,6 @@
       "editor": "stringList",
       "description": "Search employees of these companies. Provide full LinkedIn URLs. Example: `https://www.linkedin.com/company/google`",
       "maxItems": 10,
-      "minItems": 1,
       "example": ["https://www.linkedin.com/company/google"]
     },
     "locations": {
