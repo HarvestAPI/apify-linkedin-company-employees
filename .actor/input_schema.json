@@ -31,6 +31,20 @@
       "description": "Filter employees by these LinkedIn locations. Example: `San Francisco`",
       "example": ["New York", "California"],
       "maxItems": 10
+    },
+    "searchQuery": {
+      "title": "Search employees (fuzzy search)",
+      "description": "Query to search LinkedIn profiles.",
+      "type": "string",
+      "editor": "textfield",
+      "prefill": "Founder"
+    },
+    "jobTitles": {
+      "title": "Job Title Filter (strict search)",
+      "type": "array",
+      "editor": "stringList",
+      "description": "Filter Profiles by these LinkedIn job titles. Example: `Software Engineer`.",
+      "maxItems": 10
     }
   }
 }

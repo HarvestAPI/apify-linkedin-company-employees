@@ -14,8 +14,10 @@ Optionally, our tool can also try to find **email addresses** for LinkedIn profi
 
 2. Provide list companies and other filters:
 
-- List of LinkedIn Company URLs (preferably) or Company names (it will try to find the company on LinkedIn).
-- List of locations to filter employees (e.g., `New York`, `San Francisco`, `London`)
+- (required) List of LinkedIn Company URLs (preferably) or Company names (it will try to find the company on LinkedIn).
+- (optional) List of locations to filter employees (e.g., `New York`, `San Francisco`, `London`)
+- (optional) General search query (fuzzy search) (e.g., `Founder`, `Marketing Manager`, `John Doe`)
+- (optional) List of job titles to filter employees (strict search) (e.g., `Software Engineer`, `Product Manager`)
 - `maxItems` - Maximum number of profiles to scrape. If you set to 0, it will scrape all available items or up to 2500 items per search query (LinkedIn doesn't allow to extract more than 2500 per one query).
 
 ### Data You'll Receive

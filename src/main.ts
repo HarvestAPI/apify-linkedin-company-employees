@@ -37,6 +37,8 @@ interface Input {
   companies?: string[];
   locations?: string[];
   maxItems?: number;
+  searchQuery?: string;
+  jobTitles?: string[];
 }
 
 // Structure of input is defined in input_schema.json
@@ -51,14 +53,18 @@ const profileScraperMode =
 const query: {
   currentCompanies: string[];
   location: string[];
+  currentJobTitles: string[];
+  search: string;
 } = {
   currentCompanies: input.companies || [],
   location: input.locations || [],
+  search: input.searchQuery || '',
+  currentJobTitles: input.jobTitles || [],
 };
 
 for (const key of Object.keys(query) as (keyof typeof query)[]) {
   if (Array.isArray(query[key]) && query[key].length) {
-    query[key] = query[key]
+    (query[key] as string[]) = query[key]
       .map((v) => (v || '').replace(/,/g, ' ').replace(/\s+/g, ' ').trim())
       .filter((v) => v && v.length);
   }
