@@ -103,7 +103,7 @@ if (input.maxItems && input.maxItems < state.leftItems) {
   state.leftItems = input.maxItems;
 }
 
-let freeUserItemsLimit = 50;
+let freeUserItemsLimit = 25;
 if (profileScraperMode === ProfileScraperMode.EMAIL) {
   freeUserItemsLimit = 10;
 }
@@ -116,10 +116,10 @@ const logFreeUserExceeding = () =>
   );
 
 if (!isPaying) {
-  if (totalRuns > 10) {
+  if (totalRuns > 8) {
     console.warn(
       styleText('bgYellow', ' [WARNING] ') +
-        ' Free users are limited to 10 runs. Please upgrade to a paid plan to run more.',
+        ' Free users are limited to 8 runs. Please upgrade to a paid plan to run more.',
     );
     await Actor.exit();
     process.exit(0);
