@@ -17,7 +17,7 @@ Optionally, our tool can also try to find **email addresses** for LinkedIn profi
 - (required) List of LinkedIn Company URLs (preferably) or Company names (it will try to find the company on LinkedIn).
 - (optional) List of locations to filter employees (e.g., `New York`, `San Francisco`, `London`)
 - (optional) General search query (fuzzy search) (e.g., `Founder`, `Marketing Manager`, `John Doe`)
-- (optional) List of job titles to filter employees (strict search) (e.g., `Software Engineer`, `Product Manager`)
+- (optional) List of job titles to filter employees (strict search) (e.g., `Software Engineer`, `Product Manager`). Please note that LinkedIn does not always understand your text queries. For example for "UK" query it will apply "Ukraine" location, so you should use "United Kingdom" in this case. Try this out first in the location filter input of LinkedIn search at `https://www.linkedin.com/search/results/people/?geoUrn=%5B%22103644278%22%5D` - we will use the first suggestion from the autocomplete popup when you type your location.
 - `maxItems` - Maximum number of profiles to scrape. If you set to 0, it will scrape all available items or up to 2500 items per search query (LinkedIn doesn't allow to extract more than 2500 per one query).
 
 ### Data You'll Receive

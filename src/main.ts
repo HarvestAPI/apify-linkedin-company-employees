@@ -253,6 +253,12 @@ await scraper.scrapeSalesNavigatorLeads({
         `Found ${data.pagination.totalElements} profiles total for input ${JSON.stringify(itemQuery)}`,
       );
     }
+
+    if (typeof data?.error === 'string' && data.error.includes('No available resource')) {
+      console.error(
+        `We've hit LinkedIn rate limits due to the active usage from our Apify users. Rate limits reset hourly. Please continue at the beginning of the next hour.`,
+      );
+    }
   },
   addListingHeaders: {
     'x-sub-user': user?.username || '',
