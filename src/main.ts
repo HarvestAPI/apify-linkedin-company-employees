@@ -72,8 +72,9 @@ for (const key of Object.keys(query) as (keyof typeof query)[]) {
 
 if (!query.currentCompanies.length) {
   console.error('Please provide at least one company.');
-  await Actor.exit();
-  process.exit(0);
+  await Actor.exit({
+    statusMessage: 'no companies',
+  });
 }
 
 const { actorId, actorRunId, actorBuildId, userId, actorMaxPaidDatasetItems, memoryMbytes } =
@@ -121,8 +122,9 @@ if (!isPaying) {
       styleText('bgYellow', ' [WARNING] ') +
         ' Free users are limited to 8 runs. Please upgrade to a paid plan to run more.',
     );
-    await Actor.exit();
-    process.exit(0);
+    await Actor.exit({
+      statusMessage: 'free user run limit exceeded',
+    });
   }
 
   if (state.leftItems > freeUserItemsLimit) {
@@ -232,9 +234,12 @@ if (!Object.keys(itemQuery).length) {
   console.warn(
     'Please provide at least one search query or filter. Nothing to search, skipping...',
   );
-  await Actor.exit();
-  process.exit(0);
+  await Actor.exit({
+    statusMessage: 'no search query',
+  });
 }
+
+let hitRateLimit = false;
 
 await scraper.scrapeSalesNavigatorLeads({
   query: itemQuery,
@@ -255,6 +260,7 @@ await scraper.scrapeSalesNavigatorLeads({
     }
 
     if (typeof data?.error === 'string' && data.error.includes('No available resource')) {
+      hitRateLimit = true;
       console.error(
         `We've hit LinkedIn rate limits due to the active usage from our Apify users. Rate limits reset hourly. Please continue at the beginning of the next hour.`,
       );
@@ -281,5 +287,7 @@ if (isFreeUserExceeding) {
 }
 
 // Gracefully exit the Actor process. It's recommended to quit all Actors with an exit().
-await Actor.exit();
+await Actor.exit({
+  statusMessage: hitRateLimit ? 'rate limited' : 'success',
+});
 // process.exit(0);
