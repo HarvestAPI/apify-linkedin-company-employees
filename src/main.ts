@@ -94,10 +94,8 @@ if (userId) {
 }
 
 const state: {
-  lastPromise: Promise<any> | null;
   leftItems: number;
 } = {
-  lastPromise: null,
   leftItems: actorMaxPaidDatasetItems || 1000000,
 };
 if (input.maxItems && input.maxItems < state.leftItems) {
@@ -139,20 +137,20 @@ const pushItem = async (item: Profile | ProfileShort, payments: string[]) => {
 
   if (pricingInfo.isPayPerEvent) {
     if (profileScraperMode === ProfileScraperMode.SHORT) {
-      state.lastPromise = Actor.pushData(item, 'short-profile');
+      await Actor.pushData(item, 'short-profile');
     }
     if (profileScraperMode === ProfileScraperMode.FULL) {
-      state.lastPromise = Actor.pushData(item, 'full-profile');
+      await Actor.pushData(item, 'full-profile');
     }
     if (profileScraperMode === ProfileScraperMode.EMAIL) {
       if ((payments || []).includes('linkedinProfileWithEmail')) {
-        state.lastPromise = Actor.pushData(item, 'full-profile-with-email');
+        await Actor.pushData(item, 'full-profile-with-email');
       } else {
-        state.lastPromise = Actor.pushData(item, 'full-profile');
+        await Actor.pushData(item, 'full-profile');
       }
     }
   } else {
-    state.lastPromise = Actor.pushData(item);
+    await Actor.pushData(item);
   }
 };
 
@@ -273,8 +271,6 @@ await scraper.scrapeSalesNavigatorLeads({
     'x-queue-size': isPaying ? '30' : '5',
   },
 });
-
-await state.lastPromise;
 
 if (userId) {
   totalRuns = Number(await runCounterStore.getValue(userId)) || 0;
