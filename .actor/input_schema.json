@@ -45,6 +45,22 @@
       "editor": "stringList",
       "description": "Filter Profiles by these LinkedIn job titles. Example: `Software Engineer`.",
       "maxItems": 10
+    },
+
+    "startPage": {
+      "title": "Start Page",
+      "type": "integer",
+      "description": "The page number to start scraping from. ",
+      "default": 1,
+      "minimum": 1,
+      "maximum": 100
+    },
+    "takePages": {
+      "title": "Scrape Pages",
+      "type": "integer",
+      "description": "The number of search pages to scrape. Each page contains 25 profiles.",
+      "minimum": 0,
+      "maximum": 100
     }
   }
 }
