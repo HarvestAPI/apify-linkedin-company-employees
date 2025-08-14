@@ -22,8 +22,8 @@ Optionally, our tool can also try to find **email addresses** for LinkedIn profi
 
 ## Rate limits
 
-Currently this Actor cannot handle large volumes, due to LinkedIn rate limiting it (we are working on scaling it). 
-We recommend to have an automation to distribute you workload evenly, so that each hour in a day has nearly the same number of requests (avoiding bursts).  
+Currently this Actor cannot handle large volumes, due to LinkedIn rate limiting it (we are working on scaling it).
+We recommend to have an automation to distribute your workload evenly, so that each hour in a day has nearly the same number of requests (avoiding bursts).  
 We count and reset rate limits hourly, so when it hits rate limits, you can continue scraping at the beginning of the next hour. If it still doesn't fit your volumes, please create an issue and let us know how many search pages you need to scrape per hour, and we will try to scale it for you.
 
 Example of working around rate limits:
@@ -39,14 +39,22 @@ const result1 = await client.actor('harvestapi/linkedin-company-employees').call
 const { items } = await client.dataset(result1.defaultDatasetId).listItems();
 
 if (result1.statusMessage === 'rate limited') {
-  // we've hit the rate limit. 
-  
+  // we've hit the rate limit.
+
   // await until the next hour
-  await new Promise(resolve => setTimeout(resolve, 3600000 - (new Date().getMinutes() * 60000 + new Date().getSeconds() * 1000 + new Date().getMilliseconds())));
+  await new Promise((resolve) =>
+    setTimeout(
+      resolve,
+      3600000 -
+        (new Date().getMinutes() * 60000 +
+          new Date().getSeconds() * 1000 +
+          new Date().getMilliseconds()),
+    ),
+  );
 
   // continue scraping the next page after the last successfully scraped page
   const lastScrapedPageNumber = items[items.length - 1]?._meta?.pagination?.pageNumber || 0;
-  
+
   const result2 = await client.actor('harvestapi/linkedin-company-employees').call({
     currentJobTitles: ['CEO'],
     startPage: lastScrapedPageNumber + 1,
@@ -56,19 +64,20 @@ if (result1.statusMessage === 'rate limited') {
 ```
 
 Alternatively you can scrape page by page:
+
 ```js
 let currentPage = 1;
 const result = await new ApifyClient({ token: process.env.APIFY_API_KEY })
-  .actor("harvestapi/linkedin-company-employees")
+  .actor('harvestapi/linkedin-company-employees')
   .call({
-    currentJobTitles: ["CEO"],
+    currentJobTitles: ['CEO'],
     startPage: currentPage,
     takePages: 1, // scrape just one page and exit
   });
 
-if (result.statusMessage === "rate limited") {
+if (result.statusMessage === 'rate limited') {
   // await until the next hour and retry this page
-} 
+}
 currentPage++;
 // continue scraping the next page
 ```
@@ -1153,5 +1162,4 @@ The actor stores results in a dataset. You can export data in various formats su
 We continuously enhance our tools based on user feedback. If you encounter technical issues or have suggestions for improvement:
 
 - Create an issue on the actor’s Issues tab in Apify Console
-- Chat with us on our [Discord server](https://discord.gg/TGA9k9u2gE)
 - Or contact us at contact@harvest-api.com
