@@ -42,15 +42,7 @@ if (result1.statusMessage === 'rate limited') {
   // we've hit the rate limit.
 
   // await until the next hour
-  await new Promise((resolve) =>
-    setTimeout(
-      resolve,
-      3600000 -
-        (new Date().getMinutes() * 60000 +
-          new Date().getSeconds() * 1000 +
-          new Date().getMilliseconds()),
-    ),
-  );
+  await new Promise((resolve) => setTimeout(resolve, 3600000 - (new Date().getMinutes() * 60000 + new Date().getSeconds() * 1000 + new Date().getMilliseconds())));
 
   // continue scraping the next page after the last successfully scraped page
   const lastScrapedPageNumber = items[items.length - 1]?._meta?.pagination?.pageNumber || 0;
