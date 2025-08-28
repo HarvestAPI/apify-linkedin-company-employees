@@ -93,6 +93,7 @@ let totalRuns = 0;
 if (userId) {
   totalRuns = Number(await runCounterStore.getValue(userId)) || 0;
   totalRuns++;
+  await runCounterStore.setValue(userId, totalRuns);
 }
 
 const state: {
@@ -117,10 +118,10 @@ const logFreeUserExceeding = () =>
   );
 
 if (!isPaying) {
-  if (totalRuns > 8) {
+  if (totalRuns > 10) {
     console.warn(
       styleText('bgYellow', ' [WARNING] ') +
-        ' Free users are limited to 8 runs. Please upgrade to a paid plan to run more.',
+        ' Free users are limited to 10 runs. Please upgrade to a paid plan to run more.',
     );
     await Actor.exit({
       statusMessage: 'free user run limit exceeded',
@@ -137,22 +138,18 @@ if (!isPaying) {
 const pushItem = async (item: Profile | ProfileShort, payments: string[]) => {
   console.info(`Scraped profile ${item.linkedinUrl || item?.publicIdentifier || item?.id}`);
 
-  if (pricingInfo.isPayPerEvent) {
-    if (profileScraperMode === ProfileScraperMode.SHORT) {
-      await Actor.pushData(item, 'short-profile');
-    }
-    if (profileScraperMode === ProfileScraperMode.FULL) {
+  if (profileScraperMode === ProfileScraperMode.SHORT) {
+    await Actor.pushData(item, 'short-profile');
+  }
+  if (profileScraperMode === ProfileScraperMode.FULL) {
+    await Actor.pushData(item, 'full-profile');
+  }
+  if (profileScraperMode === ProfileScraperMode.EMAIL) {
+    if ((payments || []).includes('linkedinProfileWithEmail')) {
+      await Actor.pushData(item, 'full-profile-with-email');
+    } else {
       await Actor.pushData(item, 'full-profile');
     }
-    if (profileScraperMode === ProfileScraperMode.EMAIL) {
-      if ((payments || []).includes('linkedinProfileWithEmail')) {
-        await Actor.pushData(item, 'full-profile-with-email');
-      } else {
-        await Actor.pushData(item, 'full-profile');
-      }
-    }
-  } else {
-    await Actor.pushData(item);
   }
 };
 
@@ -213,7 +210,7 @@ const scrapeParams: Omit<ScrapeLinkedinSalesNavLeadsParams, 'query'> = {
   overridePageConcurrency: state.leftItems > 200 ? 2 : 1,
   warnPageLimit: isPaying,
   startPage: input.startPage,
-  takePages: input.takePages,
+  takePages: isPaying ? input.takePages : 1,
 };
 
 let didChargeForStats = false;
@@ -275,12 +272,6 @@ await scraper.scrapeSalesNavigatorLeads({
     'x-queue-size': isPaying ? '30' : '5',
   },
 });
-
-if (userId) {
-  totalRuns = Number(await runCounterStore.getValue(userId)) || 0;
-  totalRuns++;
-  await runCounterStore.setValue(userId, totalRuns);
-}
 
 if (isFreeUserExceeding) {
   logFreeUserExceeding();

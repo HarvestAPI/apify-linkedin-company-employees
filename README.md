@@ -2,7 +2,7 @@
 
 Our powerful tool helps you extract all LinkedIn Company Employees and filter by locations without compromising security or violating platform policies. Unlike other Actors scraping anonymous "LinkedIn member"s from search, this Actor can find and scrape nearly every company employee on LinkedIn.
 
-Optionally, our tool can also try to find **email addresses** for LinkedIn profiles, which is ideal for lead generation, recruitment, and networking. We perform comprehensive validation checks, including SMTP checks, to ensure the email addresses are valid and deliverable, resulting in **low bounce rates and high deliverability**. Adaptive cost: if a LinkedIn profile is not complete enough to perform the email search - we will not charge you for the search.
+Optionally, our tool can also try to find **email addresses** for LinkedIn profiles, which is ideal for lead generation, recruitment, and networking. We perform comprehensive validation checks, including SMTP checks, to ensure the email addresses are valid and deliverable. Adaptive cost: if a LinkedIn profile is not complete enough to perform the email search - we will not charge you for the search.
 
 ## How It Works
 
@@ -1154,4 +1154,5 @@ The actor stores results in a dataset. You can export data in various formats su
 We continuously enhance our tools based on user feedback. If you encounter technical issues or have suggestions for improvement:
 
 - Create an issue on the actor’s Issues tab in Apify Console
+- Chat with us on our [Discord server](https://discord.gg/TGA9k9u2gE)
 - Or contact us at contact@harvest-api.com
