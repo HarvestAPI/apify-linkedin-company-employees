@@ -89,6 +89,15 @@ const pricingInfo = cm.getPricingInfo();
 const isPaying = (user as Record<string, any> | null)?.isPaying === false ? false : true;
 const runCounterStore = await Actor.openKeyValueStore('run-counter-store');
 
+if (pricingInfo.maxTotalChargeUsd < 0.03) {
+  console.warn(
+    'Warning: The maximum total charge is set to less than $0.03, which will not be sufficient for scraping LinkedIn profiles.',
+  );
+  await Actor.exit({
+    statusMessage: 'max charge reached',
+  });
+}
+
 let totalRuns = 0;
 if (userId) {
   totalRuns = Number(await runCounterStore.getValue(userId)) || 0;
