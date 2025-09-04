@@ -137,19 +137,26 @@ if (!isPaying) {
 
 const pushItem = async (item: Profile | ProfileShort, payments: string[]) => {
   console.info(`Scraped profile ${item.linkedinUrl || item?.publicIdentifier || item?.id}`);
+  let pushResult: { eventChargeLimitReached: boolean } | null = null;
 
   if (profileScraperMode === ProfileScraperMode.SHORT) {
-    await Actor.pushData(item, 'short-profile');
+    pushResult = await Actor.pushData(item, 'short-profile');
   }
   if (profileScraperMode === ProfileScraperMode.FULL) {
-    await Actor.pushData(item, 'full-profile');
+    pushResult = await Actor.pushData(item, 'full-profile');
   }
   if (profileScraperMode === ProfileScraperMode.EMAIL) {
     if ((payments || []).includes('linkedinProfileWithEmail')) {
-      await Actor.pushData(item, 'full-profile-with-email');
+      pushResult = await Actor.pushData(item, 'full-profile-with-email');
     } else {
-      await Actor.pushData(item, 'full-profile');
+      pushResult = await Actor.pushData(item, 'full-profile');
     }
+  }
+
+  if (pushResult?.eventChargeLimitReached) {
+    await Actor.exit({
+      statusMessage: 'max charge reached',
+    });
   }
 };
 
@@ -244,13 +251,18 @@ await scraper.scrapeSalesNavigatorLeads({
   query: itemQuery,
   ...scrapeParams,
   maxItems: state.leftItems,
-  onFirstPageFetched: ({ data }) => {
+  onFirstPageFetched: async ({ data }) => {
     if (data?.status === 429) {
       console.error('Too many requests');
     } else if (data?.pagination) {
       if (!didChargeForStats) {
         didChargeForStats = true;
-        Actor.charge({ eventName: 'actor-start' });
+        const pushResult = await Actor.charge({ eventName: 'actor-start' });
+        if (pushResult.eventChargeLimitReached) {
+          await Actor.exit({
+            statusMessage: 'max charge reached',
+          });
+        }
       }
 
       console.info(
