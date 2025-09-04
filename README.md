@@ -1091,7 +1091,7 @@ Here is the example profile output of this actor:
 }
 ```
 
-## Rate limits
+## Large scale scraping and Rate Limits
 
 If you need to scrape large volumes (50,000+ profiles), the actor might possibly hit rate LinkedIn's rate limits.
 We recommend to have an automation to distribute you workload evenly, so that each hour in a day has nearly the same number of requests (avoiding bursts).  
