@@ -16,9 +16,25 @@ Optionally, our tool can also try to find **email addresses** for LinkedIn profi
 
 - (required) List of LinkedIn Company URLs (preferably) or Company names (it will try to find the company on LinkedIn).
 - (optional) List of locations to filter employees (e.g., `New York`, `San Francisco`, `London`)
-- (optional) General search query (fuzzy search) (e.g., `Founder`, `Marketing Manager`, `John Doe`)
+- (optional) General search query (fuzzy search) (e.g., `Founder`, `Marketing Manager`, `John Doe`). [The query supports operators](https://www.linkedin.com/help/linkedin/answer/a524335)
 - (optional) List of job titles to filter employees (strict search) (e.g., `Software Engineer`, `Product Manager`). Please note that LinkedIn does not always understand your text queries. For example for "UK" query it will apply "Ukraine" location, so you should use "United Kingdom" in this case. Try this out first in the location filter input of LinkedIn search at `https://www.linkedin.com/search/results/people/?geoUrn=%5B%22103644278%22%5D` - we will use the first suggestion from the autocomplete popup when you type your location.
-- `maxItems` - Maximum number of profiles to scrape. If you set to 0, it will scrape all available items or up to 2500 items per search query (LinkedIn doesn't allow to extract more than 2500 per one query).
+- (optional) List of LinkedIn industry IDs (only numbers). You can find the full list of LinkedIn industry IDs in the [LinkedIn Industries](https://github.com/HarvestAPI/linkedin-industry-codes-v2/blob/main/linkedin_industry_code_v2_all_eng_with_header.csv). For example, `4` is "Software Development", `43` is "Financial Services", etc.
+- `maxItems` - Maximum number of profiles to scrape. If you set to 0, it will scrape all available items or up to 2500 items per search query. LinkedIn doesn't allow to extract more than 2500 per one query.
+- (optional) Start Page - start scraping from this search results page.
+
+3. Run the Actor
+
+Check Actor's first logs, it will print how many profiles in total were found for your query. If the total is more than 2500, you won't be able to extract all results. Consider splitting your query into multiple queries applying more filters. For example do multiple runs for locations of specific cities, instead of one run targeting entire country or region.
+
+If you scraped a query partially and want to continue later, you can start a new run from the last scraped search page. Check the Actor's logs and find the last line like this: `Scraped page 10. Found 25 profiles`. Start a new run with specifying `startPage` in the input:
+
+```json
+{
+  "companies": ["https://www.linkedin.com/company/google"],
+  "profileScraperMode": "Full ($8 per 1k)",
+  "startPage": 11
+}
+```
 
 ### Data You'll Receive
 
@@ -1094,7 +1110,7 @@ Here is the example profile output of this actor:
 ## Large scale scraping and Rate Limits
 
 If you need to scrape large volumes (50,000+ profiles), the actor might possibly hit rate LinkedIn's rate limits.
-We recommend to have an automation to distribute you workload evenly, so that each hour in a day has nearly the same number of requests (avoiding bursts).  
+We recommend to have an automation to distribute your workload evenly, so that each hour in a day has nearly the same number of requests (avoiding bursts).  
 We count and reset rate limits hourly, so when it hits rate limits, you can continue scraping at the beginning of the next hour. If it still doesn't fit your volumes, please create an issue and let us know how many search pages you need to scrape per hour, and we will scale it for you.
 
 Example of working around rate limits:

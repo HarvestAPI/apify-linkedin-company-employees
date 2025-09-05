@@ -11,26 +11,27 @@
       "default": "Full ($8 per 1k)"
     },
     "maxItems": {
-      "title": "Maximum number of profiles to scrape for all queries",
+      "title": "Maximum number of profiles to scrape",
       "type": "integer",
-      "description": "Maximum number of profiles to scrape for all queries. The actor will stop scraping when this limit is reached.",
-      "default": 20
+      "description": "Maximum number of profiles to scrape. The actor will stop scraping when this limit is reached.",
+      "prefill": 20,
+      "maximum": 2500
     },
     "companies": {
       "title": "Companies",
       "type": "array",
       "editor": "stringList",
       "description": "Search employees of these companies. Provide full LinkedIn URLs. Example: `https://www.linkedin.com/company/google`",
-      "maxItems": 10,
-      "example": ["https://www.linkedin.com/company/google"]
+      "maxItems": 20,
+      "prefill": ["https://www.linkedin.com/company/google"]
     },
     "locations": {
       "title": "Locations Filter",
       "type": "array",
       "editor": "stringList",
       "description": "Filter employees by these LinkedIn locations. Example: `San Francisco`. LinkedIn does not always understand your text queries. For example for \"UK\" query it will apply \"Ukraine\" location, so you should use \"United Kingdom\" in this case. Try this out first in the location filter input of LinkedIn search at `https://www.linkedin.com/search/results/people/?geoUrn=%5B%22103644278%22%5D` - we will use the first suggestion from the autocomplete popup when you type your location",
-      "example": ["New York", "California"],
-      "maxItems": 10
+      "prefill": ["New York", "California"],
+      "maxItems": 20
     },
     "searchQuery": {
       "title": "Search employees (fuzzy search)",
@@ -44,7 +45,14 @@
       "type": "array",
       "editor": "stringList",
       "description": "Filter Profiles by these LinkedIn job titles. Example: `Software Engineer`.",
-      "maxItems": 10
+      "maxItems": 20
+    },
+    "industryIds": {
+      "title": "Industry IDs Filter",
+      "type": "array",
+      "editor": "stringList",
+      "description": "Filter Profiles by these LinkedIn industry IDs. Example: `4` for 'Software Development'. Full list: `https://github.com/HarvestAPI/linkedin-industry-codes-v2/blob/main/linkedin_industry_code_v2_all_eng_with_header.csv`",
+      "maxItems": 30
     },
 
     "startPage": {
