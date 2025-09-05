@@ -24,7 +24,7 @@ Optionally, our tool can also try to find **email addresses** for LinkedIn profi
 
 3. Run the Actor
 
-Check Actor's first logs, it will print how many profiles in total were found for your query. If the total is more than 2500, you won't be able to extract all results. Consider splitting your query into multiple queries applying more filters. For example do multiple runs for locations of specific cities, instead of one run targeting entire country or region.
+The Actor will print in the how many profiles in total were found for your query. If the total is more than 2500, you won't be able to extract all results. Consider splitting your query into multiple queries applying more filters. For example do multiple runs for locations of specific cities, instead of one run targeting entire country or region.
 
 If you scraped a query partially and want to continue later, you can start a new run from the last scraped search page. Check the Actor's logs and find the last line like this: `Scraped page 10. Found 25 profiles`. Start a new run with specifying `startPage` in the input:
 
