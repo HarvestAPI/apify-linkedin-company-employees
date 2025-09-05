@@ -103,6 +103,9 @@ if (pricingInfo.maxTotalChargeUsd < 0.03) {
 
 let totalRuns = 0;
 if (userId) {
+  if (!isPaying) {
+    await new Promise((resolve) => setTimeout(resolve, Math.random() * 4000));
+  }
   totalRuns = Number(await runCounterStore.getValue(userId)) || 0;
   totalRuns++;
   await runCounterStore.setValue(userId, totalRuns);
