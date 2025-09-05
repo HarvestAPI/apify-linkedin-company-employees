@@ -38,7 +38,7 @@
       "description": "Query to search LinkedIn profiles.",
       "type": "string",
       "editor": "textfield",
-      "prefill": "Founder"
+      "prefill": "Machine Learning Engineer"
     },
     "jobTitles": {
       "title": "Job Title Filter (strict search)",
