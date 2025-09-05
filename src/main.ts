@@ -300,11 +300,10 @@ await scraper.scrapeSalesNavigatorLeads({
           `We've hit LinkedIn rate limits due to the active usage from our Apify users. Rate limits reset hourly. Please continue at the beginning of the next hour.`,
         );
       }
-    } else {
-      console.info(
-        `Scraped search page ${page}. Found ${data?.elements?.length || 0} profiles on the page.`,
-      );
     }
+    console.info(
+      `Scraped search page ${page}. Found ${data?.elements?.length || 0} profiles on the page.`,
+    );
   },
   addListingHeaders: {
     'x-sub-user': user?.username || '',
