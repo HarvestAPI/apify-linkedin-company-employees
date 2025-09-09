@@ -305,7 +305,7 @@ await scraper.scrapeSalesNavigatorLeads({
       }
     }
     console.info(
-      `Scraped search page ${page}. Found ${data?.elements?.length || 0} profiles on the page.`,
+      `Scraped search page ${page}. Found ${data?.elements?.length} profiles on the page.`,
     );
   },
   addListingHeaders: {
