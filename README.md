@@ -19,6 +19,7 @@ Optionally, our tool can also try to find **email addresses** for LinkedIn profi
 - (optional) General search query (fuzzy search) (e.g., `Founder`, `Marketing Manager`, `John Doe`). [The query supports operators](https://www.linkedin.com/help/linkedin/answer/a524335)
 - (optional) List of job titles to filter employees (strict search) (e.g., `Software Engineer`, `Product Manager`). Please note that LinkedIn does not always understand your text queries. For example for "UK" query it will apply "Ukraine" location, so you should use "United Kingdom" in this case. Try this out first in the location filter input of LinkedIn search at `https://www.linkedin.com/search/results/people/?geoUrn=%5B%22103644278%22%5D` - we will use the first suggestion from the autocomplete popup when you type your location.
 - (optional) List of LinkedIn industry IDs (only numbers). You can find the full list of LinkedIn industry IDs in the [LinkedIn Industries](https://github.com/HarvestAPI/linkedin-industry-codes-v2/blob/main/linkedin_industry_code_v2_all_eng_with_header.csv). For example, `4` is "Software Development", `43` is "Financial Services", etc.
+- (optional) List of years at the company.
 - `maxItems` - Maximum number of profiles to scrape. If you set to 0, it will scrape all available items or up to 2500 items per search query. LinkedIn doesn't allow to extract more than 2500 per one query.
 - (optional) Start Page - start scraping from this search results page.
 
@@ -1129,7 +1130,15 @@ if (result1.statusMessage === 'rate limited') {
   // we've hit the rate limit.
 
   // await until the next hour
-  await new Promise((resolve) => setTimeout(resolve, 3600000 - (new Date().getMinutes() * 60000 + new Date().getSeconds() * 1000 + new Date().getMilliseconds())));
+  await new Promise((resolve) =>
+    setTimeout(
+      resolve,
+      3600000 -
+        (new Date().getMinutes() * 60000 +
+          new Date().getSeconds() * 1000 +
+          new Date().getMilliseconds()),
+    ),
+  );
 
   // continue scraping the next page after the last successfully scraped page
   const lastScrapedPageNumber = items[items.length - 1]?._meta?.pagination?.pageNumber || 0;

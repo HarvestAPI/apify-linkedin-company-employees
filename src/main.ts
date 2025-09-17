@@ -42,6 +42,7 @@ interface Input {
   startPage?: number;
   takePages?: number;
   industryIds?: string[];
+  yearsAtCurrentCompanyIds?: string[];
 }
 
 // Structure of input is defined in input_schema.json
@@ -58,6 +59,7 @@ const query: {
   location: string[];
   currentJobTitles: string[];
   industryIds: string[];
+  yearsAtCurrentCompanyIds: string[];
   search: string;
 } = {
   currentCompanies: input.companies || [],
@@ -65,6 +67,7 @@ const query: {
   search: input.searchQuery || '',
   currentJobTitles: input.jobTitles || [],
   industryIds: input.industryIds || [],
+  yearsAtCurrentCompanyIds: input.yearsAtCurrentCompanyIds || [],
 };
 
 for (const key of Object.keys(query) as (keyof typeof query)[]) {
