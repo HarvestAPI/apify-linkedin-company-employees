@@ -1,21 +1,21 @@
 // Apify SDK - toolkit for building Apify Actors (Read more at https://docs.apify.com/sdk/js/).
 import {
   ApiItemResponse,
-  ApiPagination,
   createLinkedinScraper,
   Profile,
-  ProfileShort,
+  SearchLinkedInSalesNavLeadsParams,
 } from '@harvestapi/scraper';
 import { Actor } from 'apify';
 import { config } from 'dotenv';
 import { styleText } from 'node:util';
+import { pushItem } from './utils/pushItem.js';
 
 config();
 
 // The init() call configures the Actor for its environment. It's recommended to start every Actor with an init().
 await Actor.init();
 
-enum ProfileScraperMode {
+export enum ProfileScraperMode {
   SHORT,
   FULL,
   EMAIL,
@@ -43,6 +43,7 @@ interface Input {
   takePages?: number;
   industryIds?: string[];
   yearsAtCurrentCompanyIds?: string[];
+  companyBatchMode?: 'all_at_once' | 'one_by_one';
 }
 
 // Structure of input is defined in input_schema.json
@@ -55,14 +56,14 @@ const profileScraperMode =
   ProfileScraperMode.FULL;
 
 const query: {
-  currentCompanies: string[];
+  companies: string[];
   location: string[];
   currentJobTitles: string[];
   industryIds: string[];
   yearsAtCurrentCompanyIds: string[];
   search: string;
 } = {
-  currentCompanies: input.companies || [],
+  companies: input.companies || [],
   location: input.locations || [],
   search: input.searchQuery || '',
   currentJobTitles: input.jobTitles || [],
@@ -78,7 +79,7 @@ for (const key of Object.keys(query) as (keyof typeof query)[]) {
   }
 }
 
-if (!query.currentCompanies.length) {
+if (!input.companies?.length) {
   console.error('Please provide at least one company.');
   await Actor.exit({
     statusMessage: 'no companies',
@@ -153,46 +154,6 @@ if (!isPaying) {
   }
 }
 
-const pushItem = async ({
-  item,
-  payments,
-  pagination,
-}: {
-  item: Profile | ProfileShort;
-  payments: string[];
-  pagination: ApiPagination | null;
-}) => {
-  console.info(`Scraped profile ${item.linkedinUrl || item?.publicIdentifier || item?.id}`);
-  let pushResult: { eventChargeLimitReached: boolean } | null = null;
-
-  item = {
-    ...item,
-    _meta: {
-      pagination,
-    },
-  } as (Profile | ProfileShort) & { _meta: { pagination: ApiPagination | null } };
-
-  if (profileScraperMode === ProfileScraperMode.SHORT) {
-    pushResult = await Actor.pushData(item, 'short-profile');
-  }
-  if (profileScraperMode === ProfileScraperMode.FULL) {
-    pushResult = await Actor.pushData(item, 'full-profile');
-  }
-  if (profileScraperMode === ProfileScraperMode.EMAIL) {
-    if ((payments || []).includes('linkedinProfileWithEmail')) {
-      pushResult = await Actor.pushData(item, 'full-profile-with-email');
-    } else {
-      pushResult = await Actor.pushData(item, 'full-profile');
-    }
-  }
-
-  if (pushResult?.eventChargeLimitReached) {
-    await Actor.exit({
-      statusMessage: 'max charge reached',
-    });
-  }
-};
-
 const scraper = createLinkedinScraper({
   apiKey: process.env.HARVESTAPI_TOKEN!,
   baseUrl: process.env.HARVESTAPI_URL || 'https://api.harvest-api.com',
@@ -213,8 +174,6 @@ const scraper = createLinkedinScraper({
     'x-apify-user-max-items': String(input.maxItems),
   },
 });
-
-let didChargeForStats = false;
 
 const itemQuery = {
   ...query,
@@ -241,83 +200,116 @@ if (!Object.keys(itemQuery).length) {
 
 let hitRateLimit = false;
 
-await scraper.scrapeSalesNavigatorLeads({
-  query: itemQuery,
-  maxItems: state.leftItems,
-  findEmail: profileScraperMode === ProfileScraperMode.EMAIL,
-  outputType: 'callback',
-  disableLog: true,
-  overrideConcurrency: profileScraperMode === ProfileScraperMode.EMAIL ? 10 : 8,
-  overridePageConcurrency: state.leftItems > 200 ? 2 : 1,
-  warnPageLimit: isPaying,
-  startPage: input.startPage,
-  takePages: isPaying ? input.takePages : 1,
-  onItemScraped: async ({ item, payments, pagination }) => {
-    return pushItem({ item, payments: payments || [], pagination });
-  },
-  optionsOverride: {
-    fetchItem: async ({ item }) => {
-      if (item?.id || item?.publicIdentifier) {
-        state.leftItems -= 1;
-        if (state.leftItems < 0) {
-          return { skipped: true, done: true };
-        }
-
-        if (profileScraperMode === ProfileScraperMode.SHORT && item?.id) {
-          return {
-            status: 200,
-            entityId: item.id || item.publicIdentifier,
-            element: item,
-          } as ApiItemResponse<Profile>;
-        }
-
-        return scraper.getProfile({
-          url: `https://www.linkedin.com/in/${item.publicIdentifier || item.id}`,
-          findEmail: profileScraperMode === ProfileScraperMode.EMAIL,
-        });
-      }
-
-      return { skipped: true };
+async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
+  let didChargeForStart = false;
+  console.info(
+    `Starting scraping LinkedIn Sales Navigator leads for query: ${JSON.stringify(scraperQuery)}`,
+  );
+  await scraper.scrapeSalesNavigatorLeads({
+    query: scraperQuery,
+    maxItems: state.leftItems,
+    findEmail: profileScraperMode === ProfileScraperMode.EMAIL,
+    outputType: 'callback',
+    disableLog: true,
+    overrideConcurrency: profileScraperMode === ProfileScraperMode.EMAIL ? 10 : 8,
+    overridePageConcurrency: state.leftItems > 200 ? 2 : 1,
+    warnPageLimit: isPaying,
+    startPage: input!.startPage,
+    takePages: isPaying ? input!.takePages : 1,
+    onItemScraped: async ({ item, payments, pagination }) => {
+      return pushItem({ item, payments: payments || [], pagination, profileScraperMode });
     },
-  },
-  onPageFetched: async ({ page, data }) => {
-    if (page === 1) {
-      if (data?.status === 429) {
-        console.error('Too many requests');
-      } else if (data?.pagination) {
-        if (!didChargeForStats) {
-          didChargeForStats = true;
-          const pushResult = await Actor.charge({ eventName: 'actor-start' });
-          if (pushResult.eventChargeLimitReached) {
-            await Actor.exit({
-              statusMessage: 'max charge reached',
-            });
+    optionsOverride: {
+      fetchItem: async ({ item }) => {
+        if (item?.id || item?.publicIdentifier) {
+          state.leftItems -= 1;
+          if (state.leftItems < 0) {
+            return { skipped: true, done: true };
           }
+
+          if (profileScraperMode === ProfileScraperMode.SHORT && item?.id) {
+            return {
+              status: 200,
+              entityId: item.id || item.publicIdentifier,
+              element: item,
+            } as ApiItemResponse<Profile>;
+          }
+
+          return scraper.getProfile({
+            url: `https://www.linkedin.com/in/${item.publicIdentifier || item.id}`,
+            findEmail: profileScraperMode === ProfileScraperMode.EMAIL,
+          });
         }
 
-        console.info(
-          `Found ${data.pagination.totalElements} profiles total for input ${JSON.stringify(itemQuery)}`,
-        );
-      }
+        return { skipped: true };
+      },
+    },
+    onPageFetched: async ({ page, data }) => {
+      if (page === 1) {
+        if (data?.status === 429) {
+          console.error('Too many requests');
+        } else if (data?.pagination) {
+          if (!didChargeForStart) {
+            didChargeForStart = true;
+            const pushResult = await Actor.charge({ eventName: 'actor-start' });
+            if (pushResult.eventChargeLimitReached) {
+              await Actor.exit({
+                statusMessage: 'max charge reached',
+              });
+            }
+          }
 
-      if (typeof data?.error === 'string' && data.error.includes('No available resource')) {
-        hitRateLimit = true;
-        console.error(
-          `We've hit LinkedIn rate limits due to the active usage from our Apify users. Rate limits reset hourly. Please continue at the beginning of the next hour.`,
-        );
+          console.info(
+            `Found ${data.pagination.totalElements} profiles total for input ${JSON.stringify(scraperQuery)}`,
+          );
+        }
+
+        if (typeof data?.error === 'string' && data.error.includes('No available resource')) {
+          hitRateLimit = true;
+          console.error(
+            `We've hit LinkedIn rate limits due to the active usage from our Apify users. Rate limits reset hourly. Please continue at the beginning of the next hour.`,
+          );
+        }
       }
-    }
-    console.info(
-      `Scraped search page ${page}. Found ${data?.elements?.length} profiles on the page.`,
+      console.info(
+        `Scraped search page ${page}. Found ${data?.elements?.length} profiles on the page.`,
+      );
+    },
+    addListingHeaders: {
+      'x-sub-user': user?.username || '',
+      'x-concurrency': user?.username ? '1' : (undefined as any),
+      'x-request-timeout': '360',
+      'x-queue-size': isPaying ? '30' : '5',
+    },
+  });
+}
+
+if (input.companyBatchMode === 'one_by_one') {
+  for (const company of itemQuery.companies || []) {
+    const companyQuery: SearchLinkedInSalesNavLeadsParams = {
+      ...itemQuery,
+      currentCompanies: [company],
+    };
+    delete (companyQuery as any).companies;
+    await runScraper(companyQuery);
+    if (state.leftItems <= 0) break;
+    if (hitRateLimit) break;
+  }
+} else {
+  if (input.companies && input.companies.length > 20) {
+    console.warn(
+      styleText('bgYellow', ' [WARNING] ') +
+        'You can provide up to 20 companies when using "All at once" mode.',
     );
-  },
-  addListingHeaders: {
-    'x-sub-user': user?.username || '',
-    'x-concurrency': user?.username ? '1' : (undefined as any),
-    'x-request-timeout': '360',
-    'x-queue-size': isPaying ? '30' : '5',
-  },
-});
+  }
+
+  const companyQuery: SearchLinkedInSalesNavLeadsParams = {
+    ...itemQuery,
+    currentCompanies: (input.companies || []).slice(0, 20),
+  };
+  delete (companyQuery as any).companies;
+  await runScraper(companyQuery);
+}
 
 if (isFreeUserExceeding) {
   logFreeUserExceeding();
