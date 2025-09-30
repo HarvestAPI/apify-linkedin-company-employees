@@ -2,8 +2,6 @@
 
 Our powerful tool helps you extract all LinkedIn Company Employees and filter by locations without compromising security or violating platform policies. Unlike other Actors scraping anonymous "LinkedIn member"s from search, this Actor can find and scrape nearly every company employee on LinkedIn.
 
-Optionally, our tool can also try to find **email addresses** for LinkedIn profiles, which is ideal for lead generation, recruitment, and networking. We perform comprehensive validation checks, including SMTP checks, to ensure the email addresses are valid and deliverable. Adaptive cost: if a LinkedIn profile is not complete enough to perform the email search - we will not charge you for the search.
-
 ## How It Works
 
 1. Choose Profile Scraper Mode
@@ -22,6 +20,11 @@ Optionally, our tool can also try to find **email addresses** for LinkedIn profi
 - (optional) List of years at the company.
 - `maxItems` - Maximum number of profiles to scrape. If you set to 0, it will scrape all available items or up to 2500 items per search query. LinkedIn doesn't allow to extract more than 2500 per one query.
 - (optional) Start Page - start scraping from this search results page.
+
+#### Email search
+
+By selecting the "Full + email search" profile scraper mode, you can enable our tool to perform email search for LinkedIn profiles, which is ideal for lead generation, recruitment, and networking. We perform comprehensive validation checks, including SMTP checks, to ensure the email addresses are valid and deliverable. Adaptive cost: if a LinkedIn profile is not complete enough to perform the email search - we will not charge you for the search.  
+Important Note: The scraper cannot extract emails directly from a LinkedIn profile as this information is not publicly available on the platform. The email search is performed independently and **it is not guaranteed to find an email for every profile.**
 
 3. Run the Actor
 

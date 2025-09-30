@@ -39,7 +39,7 @@
       "prefill": "Machine Learning Engineer"
     },
     "jobTitles": {
-      "title": "Job Title Filter (strict search)",
+      "title": "Job Title Filter",
       "type": "array",
       "editor": "stringList",
       "description": "Filter Profiles by these LinkedIn job titles. Example: `Software Engineer`.",
