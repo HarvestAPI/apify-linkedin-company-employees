@@ -117,8 +117,14 @@ if (userId) {
 
 const state: {
   leftItems: number;
-} = {
+  processedCompanies: string[];
+  queryScrapedPages: Record<string, number>;
+  queryChargedActorStart: Record<string, boolean>;
+} = (await Actor.getValue('crawling-state')) || {
   leftItems: actorMaxPaidDatasetItems || 1000000,
+  processedCompanies: [],
+  queryScrapedPages: {},
+  queryChargedActorStart: {},
 };
 if (input.maxItems && input.maxItems < state.leftItems) {
   state.leftItems = input.maxItems;
@@ -198,10 +204,21 @@ if (!Object.keys(itemQuery).length) {
   });
 }
 
+Actor.on('migrating', async () => {
+  await Actor.setValue('crawling-state', state);
+  await Actor.reboot();
+});
+
 let hitRateLimit = false;
 
 async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
-  let didChargeForStart = false;
+  const currentCompaniesArray = Array.isArray(scraperQuery.currentCompanies)
+    ? scraperQuery.currentCompanies
+    : [scraperQuery.currentCompanies];
+  const currentCompaniesKey = currentCompaniesArray.join(',') || 'all';
+
+  const previousScrapedPage = state.queryScrapedPages[currentCompaniesKey] || 0;
+
   console.info(
     `Starting scraping LinkedIn Sales Navigator leads for query: ${JSON.stringify(scraperQuery)}`,
   );
@@ -214,7 +231,7 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
     overrideConcurrency: profileScraperMode === ProfileScraperMode.EMAIL ? 10 : 8,
     overridePageConcurrency: state.leftItems > 200 ? 2 : 1,
     warnPageLimit: isPaying,
-    startPage: input!.startPage,
+    startPage: input!.startPage || previousScrapedPage || 1,
     takePages: isPaying ? input!.takePages : 1,
     onItemScraped: async ({ item, payments, pagination }) => {
       return pushItem({ item, payments: payments || [], pagination, profileScraperMode });
@@ -249,14 +266,15 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
         if (data?.status === 429) {
           console.error('Too many requests');
         } else if (data?.pagination) {
-          if (!didChargeForStart) {
-            didChargeForStart = true;
+          if (!state.queryChargedActorStart[currentCompaniesKey]) {
+            state.queryChargedActorStart[currentCompaniesKey] = true;
             const pushResult = await Actor.charge({ eventName: 'actor-start' });
             if (pushResult.eventChargeLimitReached) {
               await Actor.exit({
                 statusMessage: 'max charge reached',
               });
             }
+            await Actor.setValue('crawling-state', state);
           }
 
           console.info(
@@ -270,6 +288,10 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
             `We've hit LinkedIn rate limits due to the active usage from our Apify users. Rate limits reset hourly. Please continue at the beginning of the next hour.`,
           );
         }
+      }
+      if (data?.elements?.length) {
+        state.queryScrapedPages[currentCompaniesKey] = page;
+        await Actor.setValue('crawling-state', state);
       }
       console.info(
         `Scraped search page ${page}. Found ${data?.elements?.length} profiles on the page.`,
@@ -286,12 +308,22 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
 
 if (input.companyBatchMode === 'one_by_one') {
   for (const company of itemQuery.companies || []) {
+    if (state.processedCompanies.includes(company)) {
+      continue;
+    }
+
     const companyQuery: SearchLinkedInSalesNavLeadsParams = {
       ...itemQuery,
       currentCompanies: [company],
     };
     delete (companyQuery as any).companies;
     await runScraper(companyQuery);
+
+    if (!hitRateLimit) {
+      state.processedCompanies.push(company);
+    }
+    await Actor.setValue('crawling-state', state);
+
     if (state.leftItems <= 0) break;
     if (hitRateLimit) break;
   }
