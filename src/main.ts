@@ -44,6 +44,7 @@ interface Input {
   industryIds?: string[];
   yearsAtCurrentCompanyIds?: string[];
   companyBatchMode?: 'all_at_once' | 'one_by_one';
+  maxItemsPerCompany?: number;
 }
 
 // Structure of input is defined in input_schema.json
@@ -219,12 +220,21 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
 
   const previousScrapedPage = state.queryScrapedPages[currentCompaniesKey] || 0;
 
+  let maxItems = state.leftItems;
+  if (
+    input?.companyBatchMode === 'one_by_one' &&
+    input?.maxItemsPerCompany &&
+    input?.maxItemsPerCompany < maxItems
+  ) {
+    maxItems = input.maxItemsPerCompany;
+  }
+
   console.info(
     `Starting scraping LinkedIn Sales Navigator leads for query: ${JSON.stringify(scraperQuery)}`,
   );
   await scraper.scrapeSalesNavigatorLeads({
     query: scraperQuery,
-    maxItems: state.leftItems,
+    maxItems: maxItems,
     findEmail: profileScraperMode === ProfileScraperMode.EMAIL,
     outputType: 'callback',
     disableLog: true,

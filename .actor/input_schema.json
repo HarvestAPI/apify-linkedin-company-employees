@@ -77,11 +77,16 @@
       "type": "string",
       "enum": ["all_at_once", "one_by_one"],
       "enumTitles": [
-        "All at once (up to 20)",
+        "All at once (up to 20 companies)",
         "One by one. Actor start fee ($0.02) applies for each company."
       ],
       "description": "Choose how to process the companies. 'All at once' will search employees from all companies in one query, while 'One by one' will process each make a query for each company separately. The start fee will apply for each query.",
       "default": "all_at_once"
+    },
+    "maxItemsPerCompany": {
+      "title": "Maximum number of profiles to scrape per company (only for 'one by one' Company Batch Mode)",
+      "type": "integer",
+      "description": "Maximum number of profiles to scrape. The actor will stop scraping when this limit is reached."
     },
     "startPage": {
       "title": "Start Page",
