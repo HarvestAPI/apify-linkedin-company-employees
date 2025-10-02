@@ -239,7 +239,7 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
     overrideConcurrency: profileScraperMode === ProfileScraperMode.EMAIL ? 10 : 8,
     overridePageConcurrency: state.leftItems > 200 ? 2 : 1,
     warnPageLimit: isPaying,
-    startPage: input!.startPage || previousScrapedPage || 1,
+    startPage: previousScrapedPage || input!.startPage || 1,
     takePages: isPaying ? input!.takePages : 1,
     onItemScraped: async ({ item, payments, pagination }) => {
       return pushItem({ item, payments: payments || [], pagination, profileScraperMode });
