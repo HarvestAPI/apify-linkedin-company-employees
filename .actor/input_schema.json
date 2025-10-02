@@ -21,7 +21,8 @@
       "type": "array",
       "editor": "stringList",
       "description": "Search employees of these companies. Provide full LinkedIn URLs. Example: `https://www.linkedin.com/company/google`",
-      "prefill": ["https://www.linkedin.com/company/google"]
+      "prefill": ["https://www.linkedin.com/company/google"],
+      "maxItems": 1000
     },
     "locations": {
       "title": "Locations Filter",
@@ -75,7 +76,10 @@
       "title": "Company Batch Mode",
       "type": "string",
       "enum": ["all_at_once", "one_by_one"],
-      "enumTitles": ["All at once (up to 20)", "One by one"],
+      "enumTitles": [
+        "All at once (up to 20)",
+        "One by one. Actor start fee ($0.02) applies for each company."
+      ],
       "description": "Choose how to process the companies. 'All at once' will search employees from all companies in one query, while 'One by one' will process each make a query for each company separately. The start fee will apply for each query.",
       "default": "all_at_once"
     },

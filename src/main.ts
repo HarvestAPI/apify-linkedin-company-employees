@@ -299,13 +299,16 @@ if (input.companyBatchMode === 'one_by_one') {
   if (input.companies && input.companies.length > 20) {
     console.warn(
       styleText('bgYellow', ' [WARNING] ') +
-        'You can provide up to 20 companies when using "All at once" mode.',
+        'You can provide up to 20 companies when using "All at once" mode. To process more companies, please switch to "One by one" mode. Note: "One by one" will charge Actor start event ($0.02) for each company.',
     );
+    await Actor.exit({
+      statusMessage: 'up to 20 companies',
+    });
   }
 
   const companyQuery: SearchLinkedInSalesNavLeadsParams = {
     ...itemQuery,
-    currentCompanies: (input.companies || []).slice(0, 20),
+    currentCompanies: input.companies || [],
   };
   delete (companyQuery as any).companies;
   await runScraper(companyQuery);
