@@ -229,9 +229,7 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
     maxItems = input.maxItemsPerCompany;
   }
 
-  console.info(
-    `Starting scraping LinkedIn Sales Navigator leads for query: ${JSON.stringify(scraperQuery)}`,
-  );
+  console.info(`Scraping query: ${JSON.stringify(scraperQuery)}`);
   await scraper.scrapeSalesNavigatorLeads({
     query: scraperQuery,
     maxItems: maxItems,
