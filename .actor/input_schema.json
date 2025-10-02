@@ -91,9 +91,8 @@
     "startPage": {
       "title": "Start Page",
       "type": "integer",
-      "description": "The page number to start scraping from. ",
-      "default": 1,
-      "minimum": 1,
+      "description": "The page number to start scraping from. Starts from 1.",
+      "minimum": 0,
       "maximum": 100
     },
     "takePages": {
