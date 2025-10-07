@@ -101,7 +101,7 @@
       "maximum": 100
     },
     "takePages": {
-      "title": "Scrape Pages",
+      "title": "Scrape Search Pages",
       "type": "integer",
       "description": "The number of search pages to scrape. Each page contains 25 profiles.",
       "minimum": 0,
