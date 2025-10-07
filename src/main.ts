@@ -8,6 +8,7 @@ import {
 } from '@harvestapi/scraper';
 import { Actor } from 'apify';
 import { config } from 'dotenv';
+import crypto from 'node:crypto';
 import { styleText } from 'node:util';
 import { pushItem } from './utils/pushItem.js';
 
@@ -246,6 +247,7 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
     warnPageLimit: isPaying,
     startPage: previousScrapedPage || input!.startPage || 1,
     takePages: isPaying ? input!.takePages : 1,
+    sessionId: crypto.randomUUID(),
     onItemScraped: async ({ item, payments, pagination }) => {
       return pushItem({ item, payments: payments || [], pagination, profileScraperMode });
     },
