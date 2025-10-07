@@ -343,13 +343,14 @@ if (input.companyBatchMode === 'one_by_one') {
     if (hitRateLimit) break;
   }
 } else {
-  if (input.companies && input.companies.length > 20) {
+  if (input.companies && input.companies.length > 10) {
     console.warn(
       styleText('bgYellow', ' [WARNING] ') +
-        'You can provide up to 20 companies when using "All at once" mode. To process more companies, please switch to "One by one" mode. Note: "One by one" will charge Actor start event ($0.02) for each company.',
+        `You can provide up to 10 companies when using "All at once" mode. If we try to fill more than 10 companies on one search page, the LinkedIn search will become less accurate and will miss some profiles. That's why it's limited to 10 companies in "All at once".
+ To process more companies, please switch to "One by one" mode. Note: "One by one" will charge Actor start event ($0.02) for each company.`,
     );
     await Actor.exit({
-      statusMessage: 'up to 20 companies',
+      statusMessage: 'up to 10 companies',
     });
   }
 

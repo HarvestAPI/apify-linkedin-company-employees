@@ -26,6 +26,12 @@ Our powerful tool helps you extract all LinkedIn Company Employees and filter by
 By selecting the "Full + email search" profile scraper mode, you can enable our tool to perform email search for LinkedIn profiles, which is ideal for lead generation, recruitment, and networking. We perform comprehensive validation checks, including SMTP checks, to ensure the email addresses are valid and deliverable. Adaptive cost: if a LinkedIn profile is not complete enough to perform the email search - we will not charge you for the search.  
 Important Note: The scraper cannot extract emails directly from a LinkedIn profile as this information is not publicly available on the platform. The email search is performed independently and **it is not guaranteed to find an email for every profile.**
 
+#### Company Batch Mode
+
+By default the Actor scrapes one LinkedIn search page with all filters applied in the search page input fields("All at once" mode). If we try to fill more than 10 companies on one search page, the LinkedIn search will become less accurate and will miss some profiles. That's why it's limited to 10 companies in "All at once".
+
+To enable processing of more companies, we added "One by one" mode, which will start scraping a new search page for each company separately. In this mode it's possible to provide up to 1000 companies. Please note that the Actor start fee ($0.02) will apply for each company in this mode.
+
 3. Run the Actor
 
 The Actor will print in the how many profiles in total were found for your query. If the total is more than 2500, you won't be able to extract all results. Consider splitting your query into multiple queries applying more filters. For example do multiple runs for locations of specific cities, instead of one run targeting entire country or region.
