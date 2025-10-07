@@ -1,6 +1,7 @@
 // Apify SDK - toolkit for building Apify Actors (Read more at https://docs.apify.com/sdk/js/).
 import {
   ApiItemResponse,
+  BaseFetchParams,
   createLinkedinScraper,
   Profile,
   SearchLinkedInSalesNavLeadsParams,
@@ -43,6 +44,8 @@ interface Input {
   takePages?: number;
   industryIds?: string[];
   yearsAtCurrentCompanyIds?: string[];
+  recentlyChangedJobs?: boolean;
+
   companyBatchMode?: 'all_at_once' | 'one_by_one';
   maxItemsPerCompany?: number;
 }
@@ -63,6 +66,7 @@ const query: {
   industryIds: string[];
   yearsAtCurrentCompanyIds: string[];
   search: string;
+  recentlyChangedJobs?: boolean;
 } = {
   companies: input.companies || [],
   location: input.locations || [],
@@ -70,6 +74,7 @@ const query: {
   currentJobTitles: input.jobTitles || [],
   industryIds: input.industryIds || [],
   yearsAtCurrentCompanyIds: input.yearsAtCurrentCompanyIds || [],
+  recentlyChangedJobs: input.recentlyChangedJobs,
 };
 
 for (const key of Object.keys(query) as (keyof typeof query)[]) {
@@ -320,7 +325,7 @@ if (input.companyBatchMode === 'one_by_one') {
       continue;
     }
 
-    const companyQuery: SearchLinkedInSalesNavLeadsParams = {
+    const companyQuery: SearchLinkedInSalesNavLeadsParams & BaseFetchParams = {
       ...itemQuery,
       currentCompanies: [company],
     };
@@ -346,7 +351,7 @@ if (input.companyBatchMode === 'one_by_one') {
     });
   }
 
-  const companyQuery: SearchLinkedInSalesNavLeadsParams = {
+  const companyQuery: SearchLinkedInSalesNavLeadsParams & BaseFetchParams = {
     ...itemQuery,
     currentCompanies: input.companies || [],
   };

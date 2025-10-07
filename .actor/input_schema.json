@@ -71,6 +71,11 @@
       "uniqueItems": true,
       "description": "Filter Profiles by these LinkedIn years at current company IDs. Example: `3` for '3 to 5 years'."
     },
+    "recentlyChangedJobs": {
+      "title": "Recently Changed Jobs Filter",
+      "type": "boolean",
+      "description": "If enabled, only Profiles of people who have recently changed jobs will be returned."
+    },
 
     "companyBatchMode": {
       "title": "Company Batch Mode",
