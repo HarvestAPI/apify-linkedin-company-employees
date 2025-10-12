@@ -38,14 +38,29 @@ interface Input {
   profileScraperMode: string;
   companies?: string[];
   locations?: string[];
+  schools?: string[];
   maxItems?: number;
   searchQuery?: string;
   jobTitles?: string[];
+  pastJobTitles?: string[];
+  seniorityLevelIds?: string[];
+  functionIds?: string[];
+  yearsOfExperienceIds?: string[];
+  yearsAtCurrentCompanyIds?: string[];
+
   startPage?: number;
   takePages?: number;
   industryIds?: string[];
-  yearsAtCurrentCompanyIds?: string[];
   recentlyChangedJobs?: boolean;
+
+  excludePastCompanies?: string[];
+  excludeLocations?: string[];
+  excludeSchools?: string[];
+  excludeCurrentJobTitles?: string[];
+  excludePastJobTitles?: string[];
+  excludeIndustryIds?: string[];
+  excludeSeniorityLevelIds?: string[];
+  excludeFunctionIds?: string[];
 
   companyBatchMode?: 'all_at_once' | 'one_by_one';
   maxItemsPerCompany?: number;
@@ -66,8 +81,19 @@ const query: {
   currentJobTitles: string[];
   industryIds: string[];
   yearsAtCurrentCompanyIds: string[];
+  seniorityLevelIds: string[];
+  functionIds: string[];
+  yearsOfExperienceIds: string[];
   search: string;
   recentlyChangedJobs?: boolean;
+  excludePastCompanies: string[];
+  excludeLocations: string[];
+  excludeSchools: string[];
+  excludeCurrentJobTitles: string[];
+  excludePastJobTitles: string[];
+  excludeIndustryIds: string[];
+  excludeSeniorityLevelIds: string[];
+  excludeFunctionIds: string[];
 } = {
   companies: input.companies || [],
   location: input.locations || [],
@@ -76,6 +102,18 @@ const query: {
   industryIds: input.industryIds || [],
   yearsAtCurrentCompanyIds: input.yearsAtCurrentCompanyIds || [],
   recentlyChangedJobs: input.recentlyChangedJobs,
+  seniorityLevelIds: input.seniorityLevelIds || [],
+  functionIds: input.functionIds || [],
+  yearsOfExperienceIds: input.yearsOfExperienceIds || [],
+
+  excludePastCompanies: input.excludePastCompanies || [],
+  excludeLocations: input.excludeLocations || [],
+  excludeSchools: input.excludeSchools || [],
+  excludeCurrentJobTitles: input.excludeCurrentJobTitles || [],
+  excludePastJobTitles: input.excludePastJobTitles || [],
+  excludeIndustryIds: input.excludeIndustryIds || [],
+  excludeSeniorityLevelIds: input.excludeSeniorityLevelIds || [],
+  excludeFunctionIds: input.excludeFunctionIds || [],
 };
 
 for (const key of Object.keys(query) as (keyof typeof query)[]) {
