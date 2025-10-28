@@ -35,7 +35,8 @@
       "title": "Search employees (fuzzy search)",
       "description": "Query to search LinkedIn profiles.",
       "type": "string",
-      "editor": "textfield"
+      "editor": "textfield",
+      "maxLength": 300
     },
     "jobTitles": {
       "title": "Job Title Filter",
