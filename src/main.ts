@@ -408,5 +408,5 @@ if (isFreeUserExceeding) {
 await new Promise((resolve) => setTimeout(resolve, 1000));
 await Actor.exit({
   statusMessage: hitRateLimit ? 'rate limited' : 'success',
+  exitCode: hitRateLimit ? 1 : 0,
 });
-// process.exit(0);
