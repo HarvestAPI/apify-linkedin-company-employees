@@ -240,6 +240,14 @@ for (const key of Object.keys(itemQuery) as (keyof typeof itemQuery)[]) {
   }
 }
 
+console.error(
+  `We've hit LinkedIn rate limits due to the active usage from our Apify users. Rate limits reset hourly. Please continue at the beginning of the next hour.`,
+);
+await Actor.exit({
+  statusMessage: 'rate limited',
+  exitCode: 1,
+});
+
 if (!Object.keys(itemQuery).length) {
   console.warn(
     'Please provide at least one search query or filter. Nothing to search, skipping...',
