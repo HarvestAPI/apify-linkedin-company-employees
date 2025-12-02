@@ -354,7 +354,7 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
       'x-sub-user': user?.username || '',
       'x-concurrency': user?.username ? '1' : (undefined as any),
       'x-request-timeout': '360',
-      'x-queue-size': isPaying ? '30' : '5',
+      'x-queue-size': isPaying ? '30' : '1',
     },
   });
 }
