@@ -150,6 +150,14 @@ if (pricingInfo.maxTotalChargeUsd < 0.03) {
   });
 }
 
+if (typeof input.maxItems !== 'number' && typeof input.takePages !== 'number') {
+  console.warn(
+    styleText('bgYellow', ' [WARNING] ') +
+      ' Neither `maxItems` nor `takePages` is set. This may lead to scraping a large number of items and consuming more credits than expected. It is recommended to set at least one of these limits.',
+  );
+  await Actor.exit({ statusMessage: 'no limits' });
+}
+
 let totalRuns = 0;
 if (userId) {
   if (!isPaying) {
