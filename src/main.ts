@@ -222,7 +222,6 @@ const scraper = createLinkedinScraper({
     'x-apify-actor-run-id': actorRunId!,
     'x-apify-actor-build-id': actorBuildId!,
     'x-apify-memory-mbytes': String(memoryMbytes),
-    'x-apify-actor-max-paid-dataset-items': String(actorMaxPaidDatasetItems) || '0',
     'x-apify-username': user?.username || '',
     'x-apify-user-is-paying': (user as Record<string, any> | null)?.isPaying,
     'x-apify-user-is-paying2': String(isPaying),
@@ -305,10 +304,10 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
             return { skipped: true, done: true };
           }
 
-          if (profileScraperMode === ProfileScraperMode.SHORT && item?.id) {
+          if (profileScraperMode === ProfileScraperMode.SHORT) {
             return {
               status: 200,
-              entityId: item.id || item.publicIdentifier,
+              entityId: item?.id || item?.publicIdentifier,
               element: item,
             } as ApiItemResponse<Profile>;
           }
@@ -360,9 +359,9 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
     },
     addListingHeaders: {
       'x-sub-user': user?.username || '',
-      'x-concurrency': user?.username ? (isPaying ? '6' : '1') : (undefined as any),
+      'x-concurrency': user?.username ? (isPaying ? '3' : '1') : (undefined as any),
       'x-request-timeout': '360',
-      'x-queue-size': isPaying ? '30' : '1',
+      'x-queue-size': isPaying ? '5' : '1',
     },
   });
 }
@@ -412,7 +411,6 @@ if (isFreeUserExceeding) {
   logFreeUserExceeding();
 }
 
-// Gracefully exit the Actor process. It's recommended to quit all Actors with an exit().
 await new Promise((resolve) => setTimeout(resolve, 1000));
 await Actor.exit({
   statusMessage: hitRateLimit ? 'rate limited' : 'success',
