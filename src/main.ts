@@ -359,7 +359,13 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
     },
     addListingHeaders: {
       'x-sub-user': user?.username || '',
-      'x-concurrency': user?.username ? (isPaying ? '3' : '1') : (undefined as any),
+      'x-concurrency': user?.username
+        ? isPaying
+          ? profileScraperMode === ProfileScraperMode.SHORT
+            ? '2'
+            : '3'
+          : '1'
+        : (undefined as any),
       'x-request-timeout': '360',
       'x-queue-size': isPaying ? '5' : '1',
     },
