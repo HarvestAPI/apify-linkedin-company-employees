@@ -1171,3 +1171,75 @@ We continuously enhance our tools based on user feedback. If you encounter techn
 - Create an issue on the actor’s Issues tab in Apify Console
 - Chat with us on our [Discord server](https://discord.gg/TGA9k9u2gE)
 - Or contact us at contact@harvest-api.com
+
+## Input values reference
+
+### Industry IDs Filter
+
+https://github.com/HarvestAPI/linkedin-industry-codes-v2/blob/main/linkedin_industry_code_v2_all_eng_with_header.csv
+
+### Years at Current Company Filter
+
+| yearsAtCurrentCompanyIds | Duration           |
+| :----------------------- | :----------------- |
+| 1                        | Less than 1 year   |
+| 2                        | 1 to 2 years       |
+| 3                        | 3 to 5 years       |
+| 4                        | 6 to 10 years      |
+| 5                        | More than 10 years |
+
+### Years of Experience Filter
+
+| yearsOfExperienceIds | Duration           |
+| :------------------- | :----------------- |
+| 1                    | Less than 1 year   |
+| 2                    | 1 to 2 years       |
+| 3                    | 3 to 5 years       |
+| 4                    | 6 to 10 years      |
+| 5                    | More than 10 years |
+
+### Seniority Level Filter
+
+| seniorityLevelIds | Level               |
+| :---------------- | :------------------ |
+| 100               | In Training         |
+| 110               | Entry Level         |
+| 120               | Senior              |
+| 130               | Strategic           |
+| 200               | Entry Level Manager |
+| 210               | Experienced Manager |
+| 220               | Director            |
+| 300               | Vice President      |
+| 310               | CXO                 |
+| 320               | Owner / Partner     |
+
+### Function Filter
+
+| functionIds | Department / Category            |
+| :---------- | :------------------------------- |
+| 1           | Accounting                       |
+| 2           | Administrative                   |
+| 3           | Arts and Design                  |
+| 4           | Business Development             |
+| 5           | Community and Social Services    |
+| 6           | Consulting                       |
+| 7           | Education                        |
+| 8           | Engineering                      |
+| 9           | Entrepreneurship                 |
+| 10          | Finance                          |
+| 11          | Healthcare Services              |
+| 12          | Human Resources                  |
+| 13          | Information Technology           |
+| 14          | Legal                            |
+| 15          | Marketing                        |
+| 16          | Media and Communication          |
+| 17          | Military and Protective Services |
+| 18          | Operations                       |
+| 19          | Product Management               |
+| 20          | Program and Project Management   |
+| 21          | Purchasing                       |
+| 22          | Quality Assurance                |
+| 23          | Real Estate                      |
+| 24          | Research                         |
+| 25          | Sales                            |
+| 26          | Customer Success and Support     |
