@@ -1180,7 +1180,7 @@ https://github.com/HarvestAPI/linkedin-industry-codes-v2/blob/main/linkedin_indu
 
 ### Years at Current Company Filter
 
-| yearsAtCurrentCompanyIds | Duration           |
+| yearsAtCurrentCompanyIds | Description        |
 | :----------------------- | :----------------- |
 | 1                        | Less than 1 year   |
 | 2                        | 1 to 2 years       |
@@ -1190,7 +1190,7 @@ https://github.com/HarvestAPI/linkedin-industry-codes-v2/blob/main/linkedin_indu
 
 ### Years of Experience Filter
 
-| yearsOfExperienceIds | Duration           |
+| yearsOfExperienceIds | Description        |
 | :------------------- | :----------------- |
 | 1                    | Less than 1 year   |
 | 2                    | 1 to 2 years       |
@@ -1200,7 +1200,7 @@ https://github.com/HarvestAPI/linkedin-industry-codes-v2/blob/main/linkedin_indu
 
 ### Seniority Level Filter
 
-| seniorityLevelIds | Level               |
+| seniorityLevelIds | Description         |
 | :---------------- | :------------------ |
 | 100               | In Training         |
 | 110               | Entry Level         |
@@ -1215,7 +1215,7 @@ https://github.com/HarvestAPI/linkedin-industry-codes-v2/blob/main/linkedin_indu
 
 ### Function Filter
 
-| functionIds | Department / Category            |
+| functionIds | Description                      |
 | :---------- | :------------------------------- |
 | 1           | Accounting                       |
 | 2           | Administrative                   |
