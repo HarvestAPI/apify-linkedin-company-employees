@@ -1243,3 +1243,17 @@ https://github.com/HarvestAPI/linkedin-industry-codes-v2/blob/main/linkedin_indu
 | 24          | Research                         |
 | 25          | Sales                            |
 | 26          | Customer Success and Support     |
+
+### Company Headcount Filter
+
+| companyHeadcount | Description   |
+| :--------------- | :------------ |
+| A                | Self-employed |
+| B                | 1-10          |
+| C                | 11-50         |
+| D                | 51-200        |
+| E                | 201-500       |
+| F                | 501-1000      |
+| G                | 1001-5000     |
+| H                | 5001-10000    |
+| I                | 10001+        |

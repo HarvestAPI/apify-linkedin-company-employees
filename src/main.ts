@@ -47,6 +47,7 @@ interface Input {
   functionIds?: string[];
   yearsOfExperienceIds?: string[];
   yearsAtCurrentCompanyIds?: string[];
+  companyHeadcount?: string[];
 
   startPage?: number;
   takePages?: number;
@@ -84,6 +85,7 @@ const query: {
   seniorityLevelIds: string[];
   functionIds: string[];
   yearsOfExperienceIds: string[];
+  companyHeadcount: any[];
   search: string;
   recentlyChangedJobs?: boolean;
   excludePastCompanies: string[];
@@ -104,6 +106,7 @@ const query: {
   recentlyChangedJobs: input.recentlyChangedJobs,
   seniorityLevelIds: input.seniorityLevelIds || [],
   functionIds: input.functionIds || [],
+  companyHeadcount: input.companyHeadcount || [],
   yearsOfExperienceIds: input.yearsOfExperienceIds || [],
 
   excludePastCompanies: input.excludePastCompanies || [],
