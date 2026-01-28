@@ -18,11 +18,6 @@ export const pushItem = async ({
   console.info(`Scraped profile ${item.linkedinUrl || item?.publicIdentifier || item?.id}`);
   let pushResult: { eventChargeLimitReached: boolean } | null = null;
 
-  if (Array.isArray(query.currentCompanies)) {
-    query.company = query.currentCompanies[0];
-    delete query.currentCompanies;
-  }
-
   item = {
     ...item,
     _meta: {
