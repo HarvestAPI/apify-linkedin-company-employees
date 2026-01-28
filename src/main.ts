@@ -297,7 +297,13 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
     takePages: isPaying ? input!.takePages : 1,
     sessionId: crypto.randomUUID(),
     onItemScraped: async ({ item, payments, pagination }) => {
-      return pushItem({ item, payments: payments || [], pagination, profileScraperMode });
+      return pushItem({
+        item,
+        payments: payments || [],
+        pagination,
+        profileScraperMode,
+        query: scraperQuery,
+      });
     },
     optionsOverride: {
       fetchItem: async ({ item }) => {
