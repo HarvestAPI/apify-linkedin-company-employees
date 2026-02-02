@@ -141,7 +141,7 @@ const client = Actor.newClient();
 const user = userId ? await client.user(userId).get() : null;
 const cm = Actor.getChargingManager();
 const pricingInfo = cm.getPricingInfo();
-const isPaying = (user as Record<string, any> | null)?.isPaying === false ? false : true;
+const isPaying = !!process.env.APIFY_USER_IS_PAYING;
 const runCounterStore = await Actor.openKeyValueStore('run-counter-store');
 
 if (pricingInfo.maxTotalChargeUsd < 0.03) {
@@ -226,8 +226,9 @@ const scraper = createLinkedinScraper({
     'x-apify-actor-build-id': actorBuildId!,
     'x-apify-memory-mbytes': String(memoryMbytes),
     'x-apify-username': user?.username || '',
-    'x-apify-user-is-paying': (user as Record<string, any> | null)?.isPaying,
-    'x-apify-user-is-paying2': String(isPaying),
+    'x-apify-user-is-paying': String(isPaying),
+    'x-apify-user-is-paying2': String(process.env.APIFY_USER_IS_PAYING),
+    'x-apify-user-is-paying3': String((user as Record<string, any> | null)?.isPaying),
     'x-apify-max-total-charge-usd': String(pricingInfo.maxTotalChargeUsd),
     'x-apify-is-pay-per-event': String(pricingInfo.isPayPerEvent),
     'x-apify-user-runs': String(totalRuns),
