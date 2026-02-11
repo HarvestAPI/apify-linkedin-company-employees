@@ -372,7 +372,7 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
       'x-concurrency': user?.username
         ? isPaying
           ? profileScraperMode === ProfileScraperMode.SHORT
-            ? '2'
+            ? '1'
             : '2'
           : '1'
         : (undefined as any),
