@@ -373,7 +373,7 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
         ? isPaying
           ? profileScraperMode === ProfileScraperMode.SHORT
             ? '2'
-            : '2'
+            : '3'
           : '1'
         : (undefined as any),
       'x-request-timeout': '360',
