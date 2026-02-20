@@ -372,8 +372,8 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
       'x-concurrency': user?.username
         ? isPaying
           ? profileScraperMode === ProfileScraperMode.SHORT
-            ? '5'
-            : '6'
+            ? '6'
+            : '12'
           : '1'
         : (undefined as any),
       'x-request-timeout': '360',
