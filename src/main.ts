@@ -372,15 +372,15 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
       'x-concurrency': user?.username
         ? isPaying
           ? profileScraperMode === ProfileScraperMode.SHORT
-            ? '6'
-            : '12'
+            ? '12'
+            : '20'
           : '1'
         : (undefined as any),
-      'x-request-timeout': '360',
+      'x-request-timeout': '600',
       'x-queue-size': isPaying
         ? profileScraperMode === ProfileScraperMode.SHORT
-          ? '5'
-          : '8'
+          ? '30'
+          : '40'
         : '1',
     },
   });
