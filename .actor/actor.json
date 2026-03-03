@@ -5,7 +5,7 @@
   "description": "This actor scrapes employees from a LinkedIn company page.",
   "version": "0.0",
   "minMemoryMbytes": 128,
-  "maxMemoryMbytes": 256,
+  "maxMemoryMbytes": 512,
   "usesStandbyMode": false,
   "input": "./input_schema.json",
   "dockerfile": "./Dockerfile"
