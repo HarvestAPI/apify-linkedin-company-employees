@@ -1119,7 +1119,7 @@ Here is the example profile output of this actor:
 
 ## Large scale scraping and Rate Limits
 
-If you need to scrape large volumes (50,000+ profiles), the actor might possibly hit rate LinkedIn's rate limits.
+If you need to scrape large volumes (200,000+ profiles), the actor might possibly hit rate LinkedIn's rate limits.
 We recommend to have an automation to distribute your workload evenly, so that each hour in a day has nearly the same number of requests (avoiding bursts).  
 We count and reset rate limits hourly, so when it hits rate limits, you can continue scraping at the beginning of the next hour. If it still doesn't fit your volumes, please create an issue and let us know how many search pages you need to scrape per hour, and we will scale it for you.
 
