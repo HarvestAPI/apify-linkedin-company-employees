@@ -1257,3 +1257,7 @@ https://github.com/HarvestAPI/linkedin-industry-codes-v2/blob/main/linkedin_indu
 | G                | 1001-5000     |
 | H                | 5001-10000    |
 | I                | 10001+        |
+
+**\* \* \***
+
+**Disclaimer**: This Actor is an independent tool and is not affiliated with, endorsed by, or sponsored by LinkedIn Corporation. LinkedIn® is a registered trademark of LinkedIn Corporation. All trademarks are property of their respective owners.
