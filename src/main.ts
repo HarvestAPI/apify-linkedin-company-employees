@@ -283,6 +283,8 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
   ) {
     maxItems = input.maxItemsPerCompany;
   }
+  const isMoreThanOnePage =
+    (input!.takePages && input!.takePages > 1) || (maxItems && maxItems > 25);
 
   console.info(`Scraping query: ${JSON.stringify(scraperQuery)}`);
   await scraper.scrapeSalesNavigatorLeads({
@@ -296,7 +298,7 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
     warnPageLimit: isPaying,
     startPage: previousScrapedPage || input!.startPage || 1,
     takePages: isPaying ? input!.takePages : 1,
-    sessionId: crypto.randomUUID(),
+    sessionId: isMoreThanOnePage ? crypto.randomUUID() : undefined,
     onItemScraped: async ({ item, payments, pagination }) => {
       return pushItem({
         item,
