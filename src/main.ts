@@ -293,7 +293,7 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
     findEmail: profileScraperMode === ProfileScraperMode.EMAIL,
     outputType: 'callback',
     disableLog: true,
-    overrideConcurrency: 20,
+    overrideConcurrency: 10,
     overridePageConcurrency: 1,
     warnPageLimit: isPaying,
     startPage: previousScrapedPage || input!.startPage || 1,
