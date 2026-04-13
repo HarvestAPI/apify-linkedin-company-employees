@@ -371,9 +371,9 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
     },
     addItemHeaders: {
       'x-sub-user': user?.username || '',
-      'x-concurrency': '15',
+      'x-concurrency': '12',
       'x-queue-size': isPaying ? '60' : '2',
-      'x-request-timeout': '500',
+      'x-request-timeout': isPaying ? '500' : '120',
     },
     addListingHeaders: {
       'x-sub-user': user?.username || '',
