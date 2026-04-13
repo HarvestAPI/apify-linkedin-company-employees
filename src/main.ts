@@ -323,10 +323,17 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
               element: item,
             } as ApiItemResponse<Profile>;
           }
+          const profileHeaders = {
+            'x-sub-user': user?.username || user?.id || '',
+            'x-concurrency': '20',
+            'x-queue-size': isPaying ? '100' : '2',
+            'x-request-timeout': isPaying ? '500' : '100',
+          };
 
           return scraper.getProfile({
             url: `https://www.linkedin.com/in/${item.publicIdentifier || item.id}`,
             findEmail: profileScraperMode === ProfileScraperMode.EMAIL,
+            addHeaders: profileHeaders,
           });
         }
 
@@ -368,12 +375,6 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
       console.info(
         `Scraped search page ${page}. Found ${data?.elements?.length} profiles on the page.`,
       );
-    },
-    addItemHeaders: {
-      'x-sub-user': user?.username || '',
-      'x-concurrency': '12',
-      'x-queue-size': isPaying ? '60' : '2',
-      'x-request-timeout': isPaying ? '500' : '120',
     },
     addListingHeaders: {
       'x-sub-user': user?.username || '',
