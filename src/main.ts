@@ -293,7 +293,7 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
     findEmail: profileScraperMode === ProfileScraperMode.EMAIL,
     outputType: 'callback',
     disableLog: true,
-    overrideConcurrency: 10,
+    overrideConcurrency: 4,
     overridePageConcurrency: 1,
     warnPageLimit: isPaying,
     startPage: previousScrapedPage || input!.startPage || 1,
@@ -368,6 +368,12 @@ async function runScraper(scraperQuery: SearchLinkedInSalesNavLeadsParams) {
       console.info(
         `Scraped search page ${page}. Found ${data?.elements?.length} profiles on the page.`,
       );
+    },
+    addItemHeaders: {
+      'x-sub-user': user?.username || '',
+      'x-concurrency': '15',
+      'x-queue-size': isPaying ? '60' : '2',
+      'x-request-timeout': '500',
     },
     addListingHeaders: {
       'x-sub-user': user?.username || '',
